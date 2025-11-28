@@ -1,9 +1,15 @@
 import EventCard from "@/components/EventCard";
 import ExploreBtn from "@/components/ExploreBtn";
 import React from "react";
-import { events } from "@/lib/constant";
 
-const Page = () => {
+const hostname = process.env.NEXT_PUBLIC_HOSTNAME;
+const Page = async () => {
+  const response = await fetch(`${hostname}/api/events`);
+
+  if (!response.ok) throw new Error("something went wrong");
+
+  const { data } = await response.json();
+
   return (
     <section>
       <h1 className="text-center capitalize">
@@ -19,11 +25,25 @@ const Page = () => {
         <h3>Featured Event</h3>
 
         <ul className="events">
-          {events.map((event) => (
-            <li key={event.title} className="list-none">
-              <EventCard {...event} />
-            </li>
-          ))}
+          {data.length > 0 ? (
+            data.map(
+              (event: {
+                id: number;
+                name: string;
+                description: string;
+                location: string;
+                time: string;
+                image: string;
+                slug: string;
+              }) => (
+                <li key={event.id} className="list-none">
+                  <EventCard {...event} />
+                </li>
+              ),
+            )
+          ) : (
+            <p>No events found</p>
+          )}
         </ul>
       </div>
     </section>
