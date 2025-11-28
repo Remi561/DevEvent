@@ -1,19 +1,16 @@
 import EventCard from "@/components/EventCard";
 import ExploreBtn from "@/components/ExploreBtn";
 import React from "react";
+import { events } from "@/lib/constant";
 
 const Page = () => {
-  const events = [
-    { image: "/images/event1.png", title: "event1" },
-    { image: "/images/event2.png", title: "event2" },
-  ];
   return (
     <section>
       <h1 className="text-center capitalize">
-        The hub for every dev <br /> you cant miss
+        The hub for every dev <br /> you can&apos;t miss
       </h1>
       <p className="text-center mt-5">
-        Hackathon,Meetups and Conferences all in omne places
+        Hackathon,Meetups and Conferences all in one places
       </p>
 
       <ExploreBtn />
