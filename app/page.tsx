@@ -1,6 +1,7 @@
 import EventCard from "@/components/EventCard";
 import ExploreBtn from "@/components/ExploreBtn";
 import React from "react";
+import { Event } from "../types/event";
 
 const hostname = process.env.NEXT_PUBLIC_HOSTNAME;
 const Page = async () => {
@@ -25,22 +26,12 @@ const Page = async () => {
         <h3>Featured Event</h3>
 
         <ul className="events">
-          {data.length > 0 ? (
-            data.map(
-              (event: {
-                id: number;
-                name: string;
-                description: string;
-                location: string;
-                time: string;
-                image: string;
-                slug: string;
-              }) => (
-                <li key={event.id} className="list-none">
-                  <EventCard {...event} />
-                </li>
-              ),
-            )
+          {data && data?.length > 0 ? (
+            data.map((event: Event) => (
+              <li key={event.id} className="list-none">
+                <EventCard {...event} />
+              </li>
+            ))
           ) : (
             <p>No events found</p>
           )}

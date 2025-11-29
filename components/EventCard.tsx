@@ -1,15 +1,8 @@
 import React from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-interface Props {
-  id: number;
-  name: string;
-  description: string;
-  location: string;
-  time: string;
-  image: string;
-  slug: string;
-}
+import { Event } from "../types/event";
+
 
 const EventCard = ({
   name,
@@ -18,7 +11,7 @@ const EventCard = ({
   description,
   time,
   location,
-}: Props) => {
+}: Event) => {
   return (
     <Link href={`/events/${slug}`} id="event-card">
       <Image
