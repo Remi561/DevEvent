@@ -4,11 +4,12 @@ import Image from 'next/image'
 import { Event } from "../types/event";
 
 
-const EventCard = ({
+
+const EventCard = async ({
   name,
   image,
   slug,
-  description,
+  date,
   time,
   location,
 }: Event) => {
@@ -35,7 +36,7 @@ const EventCard = ({
             width={14}
             height={14}
           />
-          <p>{}</p>
+          <p>{date}</p>
         </div>
 
         <div className="flex flex-row gap-2">
