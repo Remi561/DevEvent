@@ -1,9 +1,7 @@
 'use client'
 
-const GlobalError = () => {
-  return (
-    <div>global-error</div>
-  )
-}
+const GlobalError = ({ error }: { error: Error }) => {
+  return <div>global-error: {error.message}</div>;
+};
 
 export default GlobalError

@@ -8,56 +8,100 @@ export async function POST(request: NextRequest) {
         const formData = await request.formData();
         const name = formData.get("name") as string;
         const file = formData.get("image") as File;
-      
-        const time = formData.get("time") as string
-   
+        const date = formData.get("date") as string;
+        const agenda = JSON.parse(formData.get("agenda") as string);
+        const overview = formData.get("overview") as string;
+        const venue = formData.get("venue") as string;
+        const time = formData.get("time") as string;
+        const organizer = formData.get("organizer") as string;
+        const tags = JSON.parse(formData.get("tags") as string);
+        const audience = formData.get("audience") as string;
+        const mode = formData.get("mode") as string;
+
         const location = formData.get("location") as string;
         const description = formData.get("description") as string;
 
-        const prodReadySlug = createSlug(name)
+        const prodReadySlug = createSlug(name);
 
         const foundSlug = await prisma.event.findUnique({
-            where: {slug: prodReadySlug}
-        })
+          where: { slug: prodReadySlug },
+        });
 
-        if (foundSlug) return NextResponse.json({ message: 'The event already exist' }, { status: 400 })
-        
+        if (foundSlug)
+          return NextResponse.json(
+            { message: "The event already exist" },
+            { status: 400 },
+          );
+
         // for making the file a string for prisma
 
-        if (!file) return NextResponse.json({ message: 'Image file is required ' }, { status: 400 })
-        
+        if (!file)
+          return NextResponse.json(
+            { message: "Image file is required " },
+            { status: 400 },
+          );
+
         const arrayBuffer = await file.arrayBuffer();
-        const buffer = Buffer.from(arrayBuffer)
+        const buffer = Buffer.from(arrayBuffer);
 
         const uploadResult = await new Promise((resolve, reject) => {
-            cloudinary.uploader.upload_stream({ resource_type: "image", folder: "DevEvent" }, (error, result) => {
+          cloudinary.uploader
+            .upload_stream(
+              { resource_type: "image", folder: "DevEvent" },
+              (error, result) => {
                 if (error) {
-                    return reject(error)
+                  return reject(error);
                 }
-                resolve(result)
-            }).end(buffer)
+                resolve(result);
+              },
+            )
+            .end(buffer);
+        });
 
-
-        })
-        
-        const uploadedImage = (uploadResult as { secure_url: string }).secure_url
-       
-        
-        
+        const uploadedImage = (uploadResult as { secure_url: string })
+          .secure_url;
 
         await prisma.event.create({
-            data: {
-                name,
-                image: uploadedImage, 
-                slug: prodReadySlug,
-                description,
-                location,
-                time
-                
-            }
-        })
+          data: {
+            name,
+            image: uploadedImage,
+            slug: prodReadySlug,
+            description,
+            location,
+            time,
+            date,
+            agenda,
+            overview,
+            venue,
+            organizer,
+            tags,
+            audience,
+            mode,
+          },
+        });
 
-        return NextResponse.json({message: 'Event created successfully', data: { name: formData.get("name"), image: formData.get("image"), slug: formData.get("slug"), date: formData.get("date"), time: formData.get("time"), location: formData.get("location"), description: formData.get("description") }}, {status: 201});
+        return NextResponse.json(
+          {
+            message: "Event created successfully",
+            data: {
+              name,
+              image: uploadedImage,
+              slug: prodReadySlug,
+              date,
+              time,
+              location,
+              description,
+              agenda,
+              overview,
+              venue,
+              audience,
+              mode,
+              organizer,
+              tags,
+            },
+          },
+          { status: 201 },
+        );
 
     }
     catch (error) { 

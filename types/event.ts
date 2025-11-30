@@ -6,4 +6,9 @@ export interface Event {
   time: string;
   image: string;
   slug: string;
+  date: string;
+
+  overview: string;
+  venue: string;
+  agenda: string[];
 }
