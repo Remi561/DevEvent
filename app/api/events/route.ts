@@ -3,6 +3,20 @@ import { prisma } from "@/lib/prisma";
 import { createSlug } from "@/lib/createSlug";
 import { v2 as cloudinary } from "cloudinary";
 
+/**
+ * Handles POST requests to create a new event, including image upload and database insertion.
+ *
+ * Expects a multipart/form-data request with fields:
+ * - `name`, `date`, `time`, `location`, `description`, `overview`, `venue`, `organizer`, `audience`, `mode` (strings)
+ * - `agenda`, `tags` (JSON-encoded strings)
+ * - `image` (file)
+ *
+ * Validates that the generated slug (from `name`) is unique, uploads the image to Cloudinary,
+ * creates the event record in the database, and returns the created event payload.
+ *
+ * @param request - NextRequest containing the form data described above
+ * @returns On success: a JSON object with `message: "Event created successfully"` and `data` containing the created event fields (name, image URL, slug, date, time, location, description, agenda, overview, venue, audience, mode, organizer, tags). On validation failure or other errors: a JSON object with an error `message`; status codes reflect the outcome (201 for created, 400 for errors).
+ */
 export async function POST(request: NextRequest) { 
     try {
         const formData = await request.formData();
